@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SciOly Anatomy: Endocrine Pro Quiz</title>
+    <title>SciOly EndoMaster Pro</title>
     <style>
         :root {
             --primary: #4f46e5;
@@ -11,14 +11,13 @@
             --secondary: #0ea5e9;
             --success: #22c55e;
             --danger: #ef4444;
-            --warning: #f59e0b;
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #1e293b;
             --text-sub: #64748b;
         }
 
-        * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
 
         body {
             background-color: var(--bg);
@@ -36,14 +35,15 @@
             max-width: 800px;
             background: var(--card-bg);
             border-radius: 20px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            min-height: 600px;
+            min-height: 650px;
+            position: relative;
         }
 
-        /* --- Header & Progress --- */
+        /* Header */
         .header {
             padding: 20px 30px;
             background: white;
@@ -51,23 +51,25 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            z-index: 10;
         }
 
-        .brand { font-weight: 800; color: var(--primary); font-size: 1.2rem; }
+        .brand { font-weight: 800; color: var(--primary); font-size: 1.3rem; letter-spacing: -0.5px; }
         
         .stats-bar {
-            display: flex;
+            display: none; /* Hidden on start */
             gap: 20px;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--text-sub);
         }
 
-        .stat-item span { color: var(--text-main); }
+        .stat-item span { color: var(--text-main); font-weight: 800; }
 
+        /* Progress Bar */
         .progress-container {
             height: 6px;
-            background: #e2e8f0;
+            background: #f1f5f9;
             width: 100%;
         }
 
@@ -75,10 +77,10 @@
             height: 100%;
             background: var(--primary);
             width: 0%;
-            transition: width 0.4s ease;
+            transition: width 0.3s ease;
         }
 
-        /* --- Screens --- */
+        /* Screens */
         .screen {
             padding: 40px;
             flex: 1;
@@ -87,25 +89,26 @@
             align-items: center;
             justify-content: center;
             text-align: center;
+            width: 100%;
         }
 
         .hidden { display: none !important; }
 
         /* Start Screen */
-        .hero-title { font-size: 2.5rem; margin-bottom: 10px; color: var(--text-main); }
+        .hero-title { font-size: 2.8rem; margin: 0 0 15px 0; color: var(--text-main); line-height: 1.1; }
         .hero-subtitle { color: var(--text-sub); margin-bottom: 40px; font-size: 1.1rem; }
         
         .btn {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 15px 40px;
+            padding: 16px 40px;
             font-size: 1.1rem;
             font-weight: 600;
             border-radius: 12px;
             cursor: pointer;
             transition: transform 0.1s, background 0.2s;
-            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
         }
 
         .btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
@@ -115,29 +118,30 @@
         .timer-badge {
             background: #fee2e2;
             color: var(--danger);
-            padding: 5px 12px;
+            padding: 6px 16px;
             border-radius: 20px;
-            font-weight: bold;
+            font-weight: 800;
             font-size: 0.9rem;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             display: inline-block;
         }
 
         .category-tag {
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             font-size: 0.75rem;
             color: var(--secondary);
-            font-weight: 700;
-            margin-bottom: 10px;
+            font-weight: 800;
+            margin-bottom: 15px;
         }
 
         .question-text {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
             line-height: 1.4;
-            max-width: 650px;
+            max-width: 90%;
+            color: #1e293b;
         }
 
         .options-grid {
@@ -156,33 +160,37 @@
             border-radius: 12px;
             cursor: pointer;
             text-align: left;
-            font-weight: 500;
+            font-weight: 600;
+            color: #475569;
             transition: all 0.2s;
-            position: relative;
         }
 
-        .option-card:hover:not(.disabled) { border-color: var(--primary); background: #eef2ff; }
+        .option-card:hover:not(.disabled) { border-color: var(--primary); background: #eef2ff; color: var(--primary); }
         
-        .option-card.correct { background: #dcfce7; border-color: var(--success); color: #166534; }
-        .option-card.incorrect { background: #fee2e2; border-color: var(--danger); color: #991b1b; }
-        .option-card.disabled { pointer-events: none; opacity: 0.7; }
+        .option-card.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #166534 !important; }
+        .option-card.incorrect { background: #fee2e2 !important; border-color: var(--danger) !important; color: #991b1b !important; }
+        .option-card.disabled { pointer-events: none; opacity: 0.8; }
 
+        /* Feedback Area */
         .feedback-area {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            background: #f1f5f9;
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
             width: 100%;
             display: none;
             text-align: left;
+            animation: fadeIn 0.3s ease-out;
         }
 
-        .feedback-area.visible { display: block; animation: fadeIn 0.3s; }
+        .feedback-title { font-weight: 800; font-size: 1.1rem; display: block; margin-bottom: 8px; }
+        .feedback-text { color: var(--text-sub); margin: 0 0 15px 0; line-height: 1.5; }
 
-        /* Results Screen */
+        /* Results */
         .score-circle {
-            width: 150px;
-            height: 150px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
             background: conic-gradient(var(--primary) 0%, #e2e8f0 0%);
             display: flex;
@@ -195,56 +203,45 @@
         .score-circle::before {
             content: '';
             position: absolute;
-            width: 120px;
-            height: 120px;
+            width: 130px;
+            height: 130px;
             background: white;
             border-radius: 50%;
         }
 
-        .score-number { position: relative; font-size: 2.5rem; font-weight: 800; color: var(--text-main); }
+        .score-number { position: relative; font-size: 3rem; font-weight: 800; color: var(--text-main); }
 
         .category-breakdown {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
             margin-bottom: 30px;
         }
 
         .cat-stat {
-            background: #f8fafc;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
         }
-        
-        .cat-name { font-size: 0.8rem; color: var(--text-sub); margin-bottom: 5px; }
-        .cat-val { font-weight: 700; font-size: 1.1rem; }
 
-        /* Review List */
         .review-list {
             width: 100%;
             text-align: left;
-            margin-top: 30px;
-            max-height: 300px;
+            margin-top: 20px;
+            max-height: 250px;
             overflow-y: auto;
             border: 1px solid #e2e8f0;
             border-radius: 10px;
             display: none;
         }
 
-        .review-item {
-            padding: 15px;
-            border-bottom: 1px solid #e2e8f0;
-            background: #fff;
-        }
-        
+        .review-item { padding: 15px; border-bottom: 1px solid #e2e8f0; background: #fff; }
+        .review-item:last-child { border-bottom: none; }
         .review-item.wrong { border-left: 4px solid var(--danger); }
-        .review-q { font-weight: 600; margin-bottom: 5px; }
-        .review-ans { font-size: 0.9rem; color: var(--text-sub); }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -252,7 +249,7 @@
 <div class="app-container">
     <div class="header">
         <div class="brand">🧬 SciOly EndoMaster</div>
-        <div class="stats-bar" id="stats-bar" style="display:none;">
+        <div class="stats-bar" id="stats-bar">
             <div class="stat-item">Streak: <span id="streak-display">0</span> 🔥</div>
             <div class="stat-item">Score: <span id="score-display">0</span></div>
         </div>
@@ -263,28 +260,28 @@
     </div>
 
     <div id="start-screen" class="screen">
-        <h1 class="hero-title">Endocrine System<br>Deep Cuts</h1>
-        <p class="hero-subtitle">47 High-Yield Questions • 20s Timer • Topic Analysis</p>
+        <h1 class="hero-title">Endocrine<br>Deep Cuts</h1>
+        <p class="hero-subtitle">46 Advanced Questions • 20s Timer • Topic Analysis</p>
         <button class="btn" onclick="startQuiz()">Start Challenge</button>
     </div>
 
     <div id="quiz-screen" class="screen hidden">
         <div class="timer-badge" id="timer">20s</div>
-        <div class="category-tag" id="q-category">ADRENAL GLANDS</div>
-        <div class="question-text" id="q-text">Loading question...</div>
+        <div class="category-tag" id="q-category">CATEGORY</div>
+        <div class="question-text" id="q-text">Question text goes here...</div>
         
         <div class="options-grid" id="options-container">
             </div>
 
         <div class="feedback-area" id="feedback-area">
-            <strong id="feedback-title">Correct!</strong>
-            <p id="feedback-text">Explanation goes here.</p>
-            <button class="btn" style="margin-top:10px; padding: 10px 20px;" onclick="nextQuestion()">Next</button>
+            <span class="feedback-title" id="feedback-title">Correct!</span>
+            <p class="feedback-text" id="feedback-text">Explanation...</p>
+            <button class="btn" style="padding: 10px 25px; font-size: 1rem;" onclick="nextQuestion()">Next Question</button>
         </div>
     </div>
 
     <div id="results-screen" class="screen hidden">
-        <h2>Assessment Complete</h2>
+        <h2 style="margin-bottom: 20px;">Challenge Complete</h2>
         <div class="score-circle" id="final-score-circle">
             <span class="score-number" id="final-score-num">0%</span>
         </div>
@@ -292,22 +289,315 @@
         <div class="category-breakdown" id="cat-breakdown">
             </div>
 
-        <button class="btn" onclick="toggleReview()">Review Incorrect Answers</button>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+            <button class="btn" onclick="toggleReview()" style="background: white; color: var(--primary); border: 2px solid var(--primary);">Review Mistakes</button>
+            <button class="btn" onclick="location.reload()">Try Again</button>
+        </div>
+        
         <div class="review-list" id="review-list"></div>
-        <br>
-        <button class="btn" style="background: var(--text-sub); margin-top: 10px;" onclick="location.reload()">Restart Quiz</button>
     </div>
 </div>
 
 <script>
-    /* --- DATASET: 47 Deep Cut Questions --- */
+    // --- DATASET: 46 Questions (Verified JSON Structure) ---
     const rawData = [
-        // I. Hypothalamus & Pituitary
-        { c: "Hypothalamus & Pituitary", q: "The Anterior Pituitary develops from which embryonic structure?", a: ["Rathke's Pouch", "Neuroectoderm", "Neural Crest", "Endoderm"], correct: 0, exp: "The anterior pituitary is oral ectoderm (Rathke's Pouch), while the posterior is neuroectoderm." },
-        { c: "Hypothalamus & Pituitary", q: "What is the function of the Hypophyseal Portal System?", a: ["Direct transport to anterior pituitary", "Transport to posterior pituitary", "Supply blood to the brain", "Filter toxins"], correct: 0, exp: "It allows hypothalamic hormones to reach the anterior pituitary in high concentrations without systemic dilution." },
-        { c: "Hypothalamus & Pituitary", q: "Which anterior pituitary cells stain acidophilic?", a: ["Somatotrophs & Lactotrophs", "Gonadotrophs & Thyrotrophs", "Corticotrophs only", "Basophils"], correct: 0, exp: "Acidophils (pink) are GH and Prolactin cells. Basophils (B-FLAT) are FSH, LH, ACTH, TSH." },
-        { c: "Hypothalamus & Pituitary", q: "ACTH is derived from which large precursor protein?", a: ["POMC", "Preproinsulin", "Thyroglobulin", "Angiotensinogen"], correct: 0, exp: "Pro-opiomelanocortin (POMC) is cleaved into ACTH, MSH, and Beta-endorphin." },
-        { c: "Hypothalamus & Pituitary", q: "Prolactin is uniquely under chronic inhibition by which neurotransmitter?", a: ["Dopamine", "Serotonin", "Acetylcholine", "GABA"], correct: 0, exp: "Dopamine (PIH) constantly inhibits prolactin. Stalk section leads to hyperprolactinemia." },
-        { c: "Hypothalamus & Pituitary", q: "Where are Oxytocin and ADH specifically stored in the posterior pituitary?", a: ["Herring Bodies", "Pituicytes", "Pars Intermedia", "Supraoptic Nucleus"], correct: 0, exp: "Herring bodies are the dilated nerve terminals where these hormones are stored." },
-        { c: "Hypothalamus & Pituitary", q: "Growth Hormone primarily acts by stimulating the liver to produce:", a: ["IGF-1", "Insulin", "Glucagon", "Somatostatin"], correct: 0, exp: "IGF-1 (Somatomedin C) mediates most growth effects of GH." },
-        { c: "Hypothalamus & Pituitary", q: "Ischemic necrosis of the pituitary after postpartum hemorrhage is called:", a: ["Sheehan's Syndrome", "Cushing's Disease", "Addison's Disease", "Simmonds' Disease"], correct: 0, exp
+        { c: "Pituitary", q: "The Anterior Pituitary develops from which embryonic structure?", a: ["Rathke's Pouch", "Neuroectoderm", "Neural Crest", "Endoderm"], correct: 0, exp: "The anterior pituitary is oral ectoderm (Rathke's Pouch), while the posterior is neuroectoderm." },
+        { c: "Pituitary", q: "What is the function of the Hypophyseal Portal System?", a: ["Direct transport to anterior pituitary", "Transport to posterior pituitary", "Supply blood to the brain", "Filter toxins"], correct: 0, exp: "It allows hypothalamic hormones to reach the anterior pituitary in high concentrations without dilution." },
+        { c: "Pituitary", q: "Which anterior pituitary cells stain acidophilic (pink)?", a: ["Somatotrophs & Lactotrophs", "Gonadotrophs & Thyrotrophs", "Corticotrophs", "Basophils"], correct: 0, exp: "Acidophils are GH and Prolactin cells. Basophils (B-FLAT) are FSH, LH, ACTH, TSH." },
+        { c: "Pituitary", q: "ACTH is derived from which large precursor protein?", a: ["POMC", "Preproinsulin", "Thyroglobulin", "Angiotensinogen"], correct: 0, exp: "Pro-opiomelanocortin (POMC) is cleaved into ACTH, MSH, and Beta-endorphin." },
+        { c: "Pituitary", q: "Prolactin is uniquely under chronic inhibition by which neurotransmitter?", a: ["Dopamine", "Serotonin", "Acetylcholine", "GABA"], correct: 0, exp: "Dopamine (PIH) constantly inhibits prolactin. Severing the stalk causes high prolactin." },
+        { c: "Pituitary", q: "Where are Oxytocin and ADH specifically stored in the posterior pituitary?", a: ["Herring Bodies", "Pituicytes", "Pars Intermedia", "Supraoptic Nucleus"], correct: 0, exp: "Herring bodies are the dilated nerve terminals where these hormones are stored." },
+        { c: "Pituitary", q: "Growth Hormone acts largely by stimulating the liver to produce:", a: ["IGF-1", "Insulin", "Glucagon", "Somatostatin"], correct: 0, exp: "IGF-1 (Somatomedin C) mediates most somatic growth effects." },
+        { c: "Pituitary", q: "Ischemic necrosis of the pituitary after postpartum hemorrhage is called:", a: ["Sheehan's Syndrome", "Cushing's Disease", "Addison's Disease", "Simmonds' Disease"], correct: 0, exp: "The enlarged pituitary of pregnancy is vulnerable to ischemia from blood loss." },
+        { c: "Pituitary", q: "Which drug differentiates Central from Nephrogenic Diabetes Insipidus?", a: ["Desmopressin", "Metformin", "Insulin", "Furosemide"], correct: 0, exp: "Desmopressin (synthetic ADH) cures Central DI but does nothing for Nephrogenic DI." },
+        { c: "Pituitary", q: "SIADH (Syndrome of Inappropriate ADH) typically causes:", a: ["Hyponatremia", "Hypernatremia", "Polyuria", "Dehydration"], correct: 0, exp: "Excess water retention dilutes blood sodium (hyponatremia)." },
+        
+        { c: "Thyroid/Parathyroid", q: "The temporary shutdown of thyroid hormone production due to excess iodine is:", a: ["Wolff-Chaikoff Effect", "Jod-Basedow Effect", "Graves' Effect", "Pendred Effect"], correct: 0, exp: "Wolff-Chaikoff is a protective autoregulatory inhibition." },
+        { c: "Thyroid/Parathyroid", q: "Thyroid hormones are synthesized on the scaffold of which protein?", a: ["Thyroglobulin", "Albumin", "TBG", "Transthyretin"], correct: 0, exp: "Thyroglobulin is stored in the colloid and contains the tyrosine residues." },
+        { c: "Thyroid/Parathyroid", q: "Which enzyme attaches iodine to tyrosine residues (organification)?", a: ["Thyroid Peroxidase (TPO)", "5-deiodinase", "Tyrosine Hydroxylase", "Aromatase"], correct: 0, exp: "TPO oxidizes iodine and couples it to tyrosines." },
+        { c: "Thyroid/Parathyroid", q: "Reverse T3 (rT3) is produced primarily during:", a: ["Severe stress/illness", "Hyperthyroidism", "Pregnancy", "Puberty"], correct: 0, exp: "Euthyroid Sick Syndrome creates inactive rT3 to lower metabolism during stress." },
+        { c: "Thyroid/Parathyroid", q: "Parafollicular C-cells are derived from which embryonic tissue?", a: ["Neural Crest", "Endoderm", "Mesoderm", "Ectoderm"], correct: 0, exp: "C-cells (secreting Calcitonin) migrate from the Neural Crest." },
+        { c: "Thyroid/Parathyroid", q: "How does PTH affect the kidney regarding Vitamin D?", a: ["Activates 1-alpha-hydroxylase", "Inhibits 1-alpha-hydroxylase", "Destroys Vitamin D", "Blocks absorption"], correct: 0, exp: "PTH stimulates the enzyme that converts 25-OH Vit D to active 1,25-OH Vit D." },
+        { c: "Thyroid/Parathyroid", q: "What are the functional cells of the parathyroid gland?", a: ["Chief Cells", "Oxyphil Cells", "Parafollicular Cells", "Follicular Cells"], correct: 0, exp: "Chief cells secrete PTH." },
+        { c: "Thyroid/Parathyroid", q: "Which parathyroid cells increase with age and are packed with mitochondria?", a: ["Oxyphil Cells", "Chief Cells", "C-Cells", "Hurthle Cells"], correct: 0, exp: "Oxyphil cells are eosinophilic and mitochondrial-rich; function is unclear." },
+        { c: "Thyroid/Parathyroid", q: "DiGeorge Syndrome (22q11 deletion) results in the absence of:", a: ["Thymus & Parathyroids", "Thyroid & Pituitary", "Adrenals & Gonads", "Pancreas & Spleen"], correct: 0, exp: "Failure of 3rd/4th pharyngeal pouches leads to no thymus and no parathyroids." },
+        { c: "Thyroid/Parathyroid", q: "Facial twitching when tapping the cheek is known as:", a: ["Chvostek's Sign", "Trousseau's Sign", "Babinski Sign", "Kernig's Sign"], correct: 0, exp: "A classic sign of hypocalcemia affecting the facial nerve." },
+        { c: "Thyroid/Parathyroid", q: "Carpal spasm induced by a blood pressure cuff is:", a: ["Trousseau's Sign", "Chvostek's Sign", "Homan's Sign", "Cullen's Sign"], correct: 0, exp: "Trousseau's sign is more specific for hypocalcemia than Chvostek's." },
+
+        { c: "Adrenal Glands", q: "Which layer of the adrenal cortex secretes Aldosterone?", a: ["Zona Glomerulosa", "Zona Fasciculata", "Zona Reticularis", "Medulla"], correct: 0, exp: "G-F-R: Salt (Glom), Sugar (Fasc), Sex (Ret)." },
+        { c: "Adrenal Glands", q: "Renin is secreted by which cells in the kidney?", a: ["Juxtaglomerular (JG) cells", "Podocytes", "Macula Densa", "Mesangial cells"], correct: 0, exp: "JG cells secrete renin in response to low BP." },
+        { c: "Adrenal Glands", q: "Conn's Syndrome is characterized by:", a: ["Hypertension & Hypokalemia", "Hypotension & Hyperkalemia", "Hyperglycemia", "Hypoglycemia"], correct: 0, exp: "Primary Hyperaldosteronism dumps potassium and retains sodium." },
+        { c: "Adrenal Glands", q: "The most common cause of Congenital Adrenal Hyperplasia (CAH) is deficiency in:", a: ["21-Hydroxylase", "17-Hydroxylase", "11-Hydroxylase", "Aromatase"], correct: 0, exp: "21-Hydroxylase deficiency blocks cortisol/aldosterone, shunting to androgens." },
+        { c: "Adrenal Glands", q: "According to the Rule of 10s for Pheochromocytoma, 10% are:", a: ["Malignant", "Benign", "Cortical", "In the brain"], correct: 0, exp: "10% Malignant, 10% Bilateral, 10% Extra-adrenal, 10% Familial." },
+        { c: "Adrenal Glands", q: "The enzyme PNMT, which makes Epinephrine, requires high levels of:", a: ["Cortisol", "Aldosterone", "Dopamine", "Renin"], correct: 0, exp: "Cortisol flows from the cortex to the medulla to activate PNMT." },
+        { c: "Adrenal Glands", q: "Waterhouse-Friderichsen Syndrome is adrenal failure caused by:", a: ["Meningococcal hemorrhage", "Autoimmune attack", "Tumor compression", "Tuberculosis"], correct: 0, exp: "Severe bacterial infection causes bleeding into the adrenals." },
+
+        { c: "Pancreas", q: "Which islet cells are located in the center of the islet?", a: ["Beta Cells", "Alpha Cells", "Delta Cells", "F Cells"], correct: 0, exp: "Beta cells (Insulin) are central; Alpha cells (Glucagon) are peripheral." },
+        { c: "Pancreas", q: "What is the clinical utility of measuring C-peptide?", a: ["Differentiate endogenous vs exogenous insulin", "Measure glucagon levels", "Detect amylin", "Test kidney function"], correct: 0, exp: "C-peptide is released 1:1 with natural insulin. Injected insulin has no C-peptide." },
+        { c: "Pancreas", q: "Which GLUT transporter is insulin-dependent?", a: ["GLUT4", "GLUT2", "GLUT1", "GLUT3"], correct: 0, exp: "GLUT4 (Muscle/Fat) requires insulin to move to the membrane." },
+        { c: "Pancreas", q: "GLP-1 is an example of an Incretin. What is its effect?", a: ["Stimulates insulin before glucose rises", "Inhibits insulin", "Stimulates glucagon", "Slows heart rate"], correct: 0, exp: "Incretins provide a feed-forward mechanism from the gut." },
+        { c: "Pancreas", q: "Zollinger-Ellison Syndrome is caused by a tumor secreting:", a: ["Gastrin", "Insulin", "Glucagon", "VIP"], correct: 0, exp: "Gastrinoma causes intractable peptic ulcers." },
+
+        { c: "Reproductive", q: "LH stimulates which cells in the testes?", a: ["Leydig Cells", "Sertoli Cells", "Sperm", "Germ Cells"], correct: 0, exp: "LH stimulates Leydig cells to make Testosterone." },
+        { c: "Reproductive", q: "FSH stimulates Granulosa cells to convert androgens into:", a: ["Estrogen", "Progesterone", "Testosterone", "Inhibin"], correct: 0, exp: "Granulosa cells use Aromatase to create Estrogen." },
+        { c: "Reproductive", q: "hCG acts functionally identical to which hormone?", a: ["LH", "FSH", "TSH", "GH"], correct: 0, exp: "hCG maintains the corpus luteum, acting like LH." },
+
+        { c: "Other Organs", q: "ANP (Atrial Natriuretic Peptide) is released in response to:", a: ["High blood pressure/stretch", "Low blood pressure", "High potassium", "Low sodium"], correct: 0, exp: "It antagonizes Aldosterone to lower BP." },
+        { c: "Other Organs", q: "EPO is secreted by the kidney in response to:", a: ["Hypoxia", "Hypertension", "Hyperglycemia", "Infection"], correct: 0, exp: "Low oxygen triggers RBC production." },
+        { c: "Other Organs", q: "Which hormone signals 'satiety' (fullness) from adipose tissue?", a: ["Leptin", "Ghrelin", "Insulin", "Resistin"], correct: 0, exp: "Leptin (Fat) makes you full; Ghrelin (Stomach) makes you hungry." },
+        { c: "Other Organs", q: "GIP (Gastric Inhibitory Peptide) stimulates the release of:", a: ["Insulin", "Acid", "Bile", "Pepsin"], correct: 0, exp: "It is an incretin that aids glucose disposal." },
+
+        { c: "Mechanisms", q: "Insulin and Growth Hormone receptors are which type?", a: ["Tyrosine Kinase", "G-Protein Coupled", "Nuclear", "Ion Channel"], correct: 0, exp: "They use enzyme-linked tyrosine kinases, not GPCRs." },
+        { c: "Mechanisms", q: "Thyroid hormone being required for Epinephrine to release fatty acids is:", a: ["Permissiveness", "Synergism", "Antagonism", "Up-regulation"], correct: 0, exp: "One hormone enabling the full effect of another is permissiveness." },
+        { c: "Mechanisms", q: "Glucagon + Epinephrine + Cortisol working together is an example of:", a: ["Synergism", "Permissiveness", "Antagonism", "Desensitization"], correct: 0, exp: "The combined effect is greater than the sum of individual effects." },
+        { c: "Mechanisms", q: "Type 2 Diabetes involves which receptor phenomenon?", a: ["Down-regulation", "Up-regulation", "Sensitization", "Internalization"], correct: 0, exp: "Cells decrease receptor density in response to chronically high insulin." },
+
+        { c: "MEN Syndromes", q: "MEN 1 involves tumors of:", a: ["Pituitary, Parathyroid, Pancreas", "Thyroid, Adrenal, Mouth", "Lung, Liver, Bone", "Kidney, Bladder, Prostate"], correct: 0, exp: "The 3 Ps: Pituitary, Parathyroid, Pancreas." },
+        { c: "MEN Syndromes", q: "Medullary Thyroid Cancer and Pheochromocytoma are seen in:", a: ["MEN 2A & 2B", "MEN 1 only", "MEN 1 & 2A", "None"], correct: 0, exp: "Both MEN 2 subtypes share these two features." },
+        { c: "MEN Syndromes", q: "Mucosal Neuromas are a specific feature of:", a: ["MEN 2B", "MEN 2A", "MEN 1", "Neurofibromatosis"], correct: 0, exp: "MEN 2B includes the Marfanoid habitus and mucosal neuromas." }
+    ];
+
+    // --- APP LOGIC ---
+    let quizData = [];
+    let currentIndex = 0;
+    let score = 0;
+    let streak = 0;
+    let timerInterval;
+    let timeLeft = 20;
+    let categoryStats = {};
+    let reviewLog = [];
+
+    function shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex != 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+
+    function startQuiz() {
+        console.log("Starting Quiz..."); // Debug
+        
+        // Initialize Data
+        quizData = shuffle(JSON.parse(JSON.stringify(rawData)));
+        categoryStats = {};
+        rawData.forEach(q => {
+            if (!categoryStats[q.c]) categoryStats[q.c] = { total: 0, correct: 0 };
+        });
+
+        // Switch Screens
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('results-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        document.getElementById('stats-bar').style.display = 'flex';
+        
+        currentIndex = 0;
+        score = 0;
+        streak = 0;
+        reviewLog = [];
+        updateStatsUI();
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        if (currentIndex >= quizData.length) {
+            endQuiz();
+            return;
+        }
+
+        const q = quizData[currentIndex];
+        
+        // UI Reset
+        document.getElementById('feedback-area').style.display = 'none';
+        document.getElementById('options-container').innerHTML = '';
+        document.getElementById('options-container').style.pointerEvents = 'auto';
+        document.getElementById('progress-bar').style.width = `${(currentIndex / quizData.length) * 100}%`;
+        
+        // Text
+        document.getElementById('q-category').textContent = q.c;
+        document.getElementById('q-text').textContent = q.q;
+        
+        // Options
+        let options = q.a.map((opt, i) => ({ text: opt, originalIndex: i }));
+        options = shuffle(options);
+
+        const container = document.getElementById('options-container');
+        options.forEach(opt => {
+            const btn = document.createElement('div');
+            btn.className = 'option-card';
+            btn.textContent = opt.text;
+            btn.onclick = () => selectAnswer(btn, opt.originalIndex, q);
+            container.appendChild(btn);
+        });
+
+        startTimer();
+    }
+
+    function startTimer() {
+        timeLeft = 20;
+        const timerEl = document.getElementById('timer');
+        timerEl.textContent = `${timeLeft}s`;
+        timerEl.style.background = '#fee2e2';
+        timerEl.style.color = '#ef4444';
+        
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            timerEl.textContent = `${timeLeft}s`;
+            if (timeLeft < 6) {
+                timerEl.style.background = '#ef4444';
+                timerEl.style.color = 'white';
+            }
+            
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                handleTimeout();
+            }
+        }, 1000);
+    }
+
+    function selectAnswer(btn, selectedIndex, questionData) {
+        clearInterval(timerInterval);
+        document.getElementById('options-container').style.pointerEvents = 'none'; // Lock options
+        
+        // Update Stats
+        if (!categoryStats[questionData.c]) categoryStats[questionData.c] = { total: 0, correct: 0 };
+        categoryStats[questionData.c].total++;
+        
+        const isCorrect = selectedIndex === questionData.correct;
+        const correctText = questionData.a[questionData.correct];
+
+        const allOpts = document.querySelectorAll('.option-card');
+        
+        if (isCorrect) {
+            btn.classList.add('correct');
+            score++;
+            streak++;
+            categoryStats[questionData.c].correct++;
+            document.getElementById('feedback-title').textContent = "Correct! 🎉";
+            document.getElementById('feedback-title').style.color = "var(--success)";
+        } else {
+            btn.classList.add('incorrect');
+            streak = 0;
+            // Highlight right answer
+            allOpts.forEach(o => {
+                if (o.textContent === correctText) o.classList.add('correct');
+            });
+            document.getElementById('feedback-title').textContent = "Incorrect";
+            document.getElementById('feedback-title').style.color = "var(--danger)";
+            
+            reviewLog.push({
+                q: questionData.q,
+                your: btn.textContent,
+                correct: correctText,
+                exp: questionData.exp
+            });
+        }
+
+        updateStatsUI();
+
+        // Show Feedback
+        document.getElementById('feedback-text').textContent = questionData.exp;
+        document.getElementById('feedback-area').style.display = 'block';
+    }
+
+    function handleTimeout() {
+        document.getElementById('options-container').style.pointerEvents = 'none';
+        streak = 0;
+        updateStatsUI();
+        
+        const q = quizData[currentIndex];
+        if (!categoryStats[q.c]) categoryStats[q.c] = { total: 0, correct: 0 };
+        categoryStats[q.c].total++;
+        
+        const allOpts = document.querySelectorAll('.option-card');
+        allOpts.forEach(o => {
+            if (o.textContent === q.a[q.correct]) o.classList.add('correct');
+        });
+
+        document.getElementById('feedback-title').textContent = "Time's Up!";
+        document.getElementById('feedback-title').style.color = "var(--danger)";
+        document.getElementById('feedback-text').textContent = q.exp;
+        document.getElementById('feedback-area').style.display = 'block';
+        
+        reviewLog.push({
+            q: q.q,
+            your: "Timed Out",
+            correct: q.a[q.correct],
+            exp: q.exp
+        });
+    }
+
+    function updateStatsUI() {
+        document.getElementById('score-display').textContent = score;
+        document.getElementById('streak-display').textContent = streak;
+    }
+
+    function nextQuestion() {
+        currentIndex++;
+        loadQuestion();
+    }
+
+    function endQuiz() {
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('results-screen').classList.remove('hidden');
+        document.getElementById('stats-bar').style.display = 'none';
+
+        // Score
+        const percent = Math.round((score / quizData.length) * 100);
+        document.getElementById('final-score-num').textContent = `${percent}%`;
+        
+        const deg = (percent / 100) * 360;
+        document.getElementById('final-score-circle').style.background = 
+            `conic-gradient(var(--primary) ${deg}deg, #e2e8f0 0deg)`;
+
+        // Breakdown
+        const catContainer = document.getElementById('cat-breakdown');
+        catContainer.innerHTML = '';
+        
+        for (const [cat, stat] of Object.entries(categoryStats)) {
+            if (stat.total === 0) continue;
+            const catPercent = Math.round((stat.correct / stat.total) * 100);
+            const div = document.createElement('div');
+            div.className = 'cat-stat';
+            div.innerHTML = `
+                <div style="font-weight:700; color:#64748b; font-size:0.75rem; text-transform:uppercase;">${cat}</div>
+                <div style="font-size:1.1rem; font-weight:800; color:${catPercent >= 70 ? 'var(--success)' : 'var(--danger)'}">
+                    ${catPercent}% (${stat.correct}/${stat.total})
+                </div>
+            `;
+            catContainer.appendChild(div);
+        }
+
+        // Review List
+        const reviewContainer = document.getElementById('review-list');
+        reviewContainer.innerHTML = '';
+        reviewContainer.style.display = 'none'; // Reset visibility
+
+        if (reviewLog.length === 0) {
+            reviewContainer.innerHTML = '<div style="padding:20px; text-align:center;">Perfect Score! Nothing to review. 🌟</div>';
+        } else {
+            reviewLog.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'review-item wrong';
+                div.innerHTML = `
+                    <div style="font-weight:700; margin-bottom:5px;">${item.q}</div>
+                    <div style="font-size:0.9rem; color:#ef4444;">You: ${item.your}</div>
+                    <div style="font-size:0.9rem; color:#22c55e;">Correct: ${item.correct}</div>
+                    <div style="font-size:0.85rem; color:#64748b; margin-top:5px; font-style:italic;">${item.exp}</div>
+                `;
+                reviewContainer.appendChild(div);
+            });
+        }
+    }
+
+    function toggleReview() {
+        const list = document.getElementById('review-list');
+        list.style.display = (list.style.display === 'none' || list.style.display === '') ? 'block' : 'none';
+    }
+
+</script>
+</body>
+</html>
